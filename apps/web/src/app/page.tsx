@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
+import { Suspense, useEffect, useState } from 'react';
+import { ExpenseTracker } from '@/components/expense-tracker';
+import { API_URL } from '@/lib/expenses';
 
 export default function Home() {
   const [health, setHealth] = useState<string>('checking...');
@@ -15,9 +15,14 @@ export default function Home() {
   }, []);
 
   return (
-    <main style={{ padding: 32, fontFamily: 'system-ui' }}>
-      <h1>expense-tracker</h1>
-      <p data-testid="health">{health}</p>
+    <main className="app">
+      {/* The tracker reads today's date, which Cache Components only allows at request time, so it sits behind a Suspense boundary. */}
+      <Suspense fallback={<p className="muted">Loading expenses…</p>}>
+        <ExpenseTracker />
+      </Suspense>
+      <p className="health" data-testid="health">
+        {health}
+      </p>
     </main>
   );
 }
