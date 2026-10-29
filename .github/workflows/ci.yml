@@ -61,9 +61,8 @@ jobs:
         env:
           VERCEL_PROJECT_ID: ${{ secrets[matrix.project] }}
         run: |
-          vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
-          vercel build --prod --token "$VERCEL_TOKEN"
-          URL=$(vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN")
+          # remote build: the project (root directory, framework, env) is configured on Vercel; a --prebuilt deploy fails on projects without a first deployment
+          URL=$(vercel deploy --prod --yes --token "$VERCEL_TOKEN")
           echo "url=$URL" >> "$GITHUB_STEP_SUMMARY"
           curl -fsS -H "Title: Deployed ${{ matrix.app }}: ${{ github.repository }}" -H "Tags: rocket" -d "$URL" \
             "${NTFY_SERVER:-https://ntfy.sh}/${NTFY_TOPIC}" || true

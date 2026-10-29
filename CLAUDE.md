@@ -9,6 +9,8 @@ Monorepo (npm workspaces): `apps/web` (Next.js), `apps/api` (NestJS + Postgres v
 - Before finishing run `npm run verify` (lint, unit tests, build, e2e) and fix failures. Do not disable or delete tests to make them pass.
 - Web calls the API through `NEXT_PUBLIC_API_URL`. The API reads `DATABASE_URL` (optional locally: health reports `db: disabled`).
 
+- Tests that persist data need Postgres: `npm run verify` runs with `DATABASE_URL` already pointing at a throwaway local postgres (docker compose service `db`, port 55432). Create tables in code (`CREATE TABLE IF NOT EXISTS`), never rely on manual setup.
+
 ## Commands
 - `npm install` — install all workspaces
 - `npm run verify` — full local check, same as CI
